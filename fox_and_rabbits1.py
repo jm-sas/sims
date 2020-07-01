@@ -2,10 +2,19 @@
 
 import turtle
 import random
+import math
 
 maxX=240
 maxY=240
 plants = []
+
+def calculateDistance(pt1, pt2):
+     x1 = pt1[0]
+     y1 = pt1[1]
+     x2 = pt2[0]
+     y2 = pt2[1]
+     dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+     return dist
 
 #initalizes the food
 #you could combine this with foxes and rabbits
@@ -51,19 +60,24 @@ def fox_and_rabbits():
     global maxX
     global maxY
 
+    fd_speed = 5
     screen = turtle.Screen()
     screen.setup(width=600, height=600)
     screen.bgcolor('black')
     screen.tracer(0)
 
-    num_plants = 20
+    num_plants =  50
     #num_rabbits
     #num_foxes
 
     seed_plants(num_plants)
 
+    #Create Rabbit
     rabbit = turtle.Turtle()
     rabbit.penup()
+    rabbit.health = 100
+
+    #Draw a border around active area
     rabbit.goto(maxX,maxY)
     rabbit.setheading(180)
     rabbit.pendown()
@@ -73,19 +87,42 @@ def fox_and_rabbits():
         rabbit.lt(90)
 
     rabbit.color('blue')
+
+    rabbit.penup()
     x = random.randint(-1*maxX,maxX)
     y = random.randint(-1*maxY,maxY)
-    rabbit.penup()
     rabbit.goto(x,y)
-
-    while True: #this needs to get turned into a function
+    while rabbit.health >= 0: #this needs to get turned into a function
         screen.tracer(0)
         rabbit.dx = random.randint(-5,5)
         rabbit.dy = random.randint(-5,5)
         rabbit.da = random.randint(-10,10)
-
         rabbit.rt(rabbit.da)
-        rabbit.fd(5)
+
+        #Look for food
+        for plant in plants:
+            distance_to_plant = calculateDistance(rabbit.pos(),plant.pos())
+            plant.color('green')
+            if(abs(rabbit.towards(plant) - rabbit.heading() ) < 45 \
+               and distance_to_plant < 25*fd_speed):
+                #rabbit sees a plant
+                rabbit.setheading(rabbit.towards(plant.xcor(), plant.ycor()))
+                rabbit.color('green')
+                plant.color('red')
+
+                if(distance_to_plant <= fd_speed):
+                    plants.remove(plant)
+                    rabbit.health += 50
+                    rabbit.color('red')
+                    plant.reset()
+                    print('Plants left' + str(len(plants))+ ':' + str(len(screen.turtles())))
+
+                break
+            else:
+                rabbit.color('blue')
+
+        rabbit.fd(fd_speed)
+
         #rabbit.setx(rabbit.xcor() + rabbit.dx)
         #rabbit.sety(rabbit.ycor() + rabbit.dy)
 
@@ -107,6 +144,13 @@ def fox_and_rabbits():
             rabbit.rt(rabbit.da)
         screen.update()
 
+        rabbit.health -= 1
+        print('Rabbit Health=' + str(rabbit.health))
+
+    #Rabbit died
+    rabbit.color('gray')
+    rabbit.write('Rabbit starved to death')
+    screen.update()
     turtle.done()
 
 if __name__ == "__main__":
