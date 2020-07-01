@@ -1,0 +1,113 @@
+#fox and rabbits
+
+import turtle
+import random
+
+maxX=240
+maxY=240
+plants = []
+
+#initalizes the food
+#you could combine this with foxes and rabbits
+def seed_plants(num_plants):
+    global maxX
+    global maxY
+    global plants
+
+    for i in range(num_plants):
+        plants.append(turtle.Turtle())
+
+    for plant in plants:
+        x = random.randint(-maxX,maxX)
+        y = random.randint(-maxY,maxY)
+
+        plant.penup()
+        plant.color('green')
+        plant.shape('circle')
+        #make the food smaller
+        plant.shapesize(0.5,0.5,0.5) #default is 1,1,1
+        plant.goto(x,y)
+
+#plants grow over time
+#def grow():
+
+#seeking behavior towards rabbits
+#def foxes():
+
+#seeks plants, runs from foxes
+#def rabbits():
+#I'm still fuzzy on how to get functions to interact
+#rabbit.health() = 100
+#if it eats a plant
+#rabbit.health() += 25 or whatever
+#if rabbit.health() == 0:
+#    death
+
+
+#def run():
+
+
+def fox_and_rabbits():
+    global maxX
+    global maxY
+
+    screen = turtle.Screen()
+    screen.setup(width=600, height=600)
+    screen.bgcolor('black')
+    screen.tracer(0)
+
+    num_plants = 20
+    #num_rabbits
+    #num_foxes
+
+    seed_plants(num_plants)
+
+    rabbit = turtle.Turtle()
+    rabbit.penup()
+    rabbit.goto(maxX,maxY)
+    rabbit.setheading(180)
+    rabbit.pendown()
+    rabbit.color('red')
+    for ii in range(0,4):
+        rabbit.fd(maxX*2)
+        rabbit.lt(90)
+
+    rabbit.color('blue')
+    x = random.randint(-1*maxX,maxX)
+    y = random.randint(-1*maxY,maxY)
+    rabbit.penup()
+    rabbit.goto(x,y)
+
+    while True: #this needs to get turned into a function
+        screen.tracer(0)
+        rabbit.dx = random.randint(-5,5)
+        rabbit.dy = random.randint(-5,5)
+        rabbit.da = random.randint(-10,10)
+
+        rabbit.rt(rabbit.da)
+        rabbit.fd(5)
+        #rabbit.setx(rabbit.xcor() + rabbit.dx)
+        #rabbit.sety(rabbit.ycor() + rabbit.dy)
+
+        if rabbit.ycor() < -maxX:
+            rabbit.sety(-maxX) #prevents it from going out of bounds
+            rabbit.da = 180 - rabbit.heading()
+            rabbit.rt(rabbit.da)
+        elif rabbit.ycor() > maxY:
+            rabbit.sety(maxY)
+            rabbit.da = 90 - rabbit.heading()
+            rabbit.rt(rabbit.da)
+        if rabbit.xcor() > maxX:
+            rabbit.setx(maxX)
+            rabbit.da = 270 + rabbit.heading()
+            rabbit.rt(rabbit.da)
+        elif rabbit.xcor() < -maxY:
+            rabbit.setx(-maxY)
+            rabbit.da = 90 + rabbit.heading()
+            rabbit.rt(rabbit.da)
+        screen.update()
+
+    turtle.done()
+
+if __name__ == "__main__":
+    fox_and_rabbits()
