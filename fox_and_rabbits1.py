@@ -8,6 +8,10 @@ maxX=240
 maxY=240
 plants = []
 
+# Calculate Distance expects 2 tuples pt1, pt2
+# pt1 (x1,y1), pt2(x2, y2)
+# e.g. calculateDistance(turtle0.pos(), turtle1.pos())
+########
 def calculateDistance(pt1, pt2):
      x1 = pt1[0]
      y1 = pt1[1]

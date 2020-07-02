@@ -10,6 +10,8 @@ plants = []
 free_turtles = []
 free_rabbits = []
 
+#Calculates Distance between two points
+#Expects a tuple like turtle.pos()
 def calculateDistance(pt1, pt2):
      x1 = pt1[0]
      y1 = pt1[1]
@@ -21,7 +23,6 @@ def calculateDistance(pt1, pt2):
 
 #initalizes the food
 #you could combine this with foxes and rabbits
-
 def place_plant(obj_turtle):
     x = random.randint(-maxX,maxX)
     y = random.randint(-maxY,maxY)
@@ -48,6 +49,7 @@ def init_rabbit(r):
     r.reset()
     r.health = 100
     r.age = 0
+    #After rabbits mate they can't mate again until cooldown < 0
     r.cooldown = 10
     r.dead = False
     r.sex = random.choice(['M','F'])
@@ -107,14 +109,15 @@ def main():
     #I only want one color so I choose c1
     draw_square(rabbits[0], maxX, maxY, maxX,'red' )
 
+    #Move the rabbits
     rabbits_alive = True
     while rabbits_alive ==  True: #this needs to get turned into a function
         screen.tracer(0)
         rabbits_alive = False
         for rabbit in rabbits:
             if(rabbit.dead == False):
-                rabbit.dx = random.randint(-5,5)
-                rabbit.dy = random.randint(-5,5)
+                #rabbit.dx = random.randint(-5,5)
+                #rabbit.dy = random.randint(-5,5)
                 rabbit.da = random.randint(-15,15)
                 rabbit.rt(rabbit.da)
 
@@ -201,7 +204,8 @@ def main():
                                 pass
 
                         baby_rabbit.goto(r.xcor(),r.ycor())
-                        print(str(len(rabbits)) + '           --->'+ 'Baby Rabbit' + str(r.age) + ':' +  str(rabbit.age))
+                        print(str(len(rabbits)) + '           --->'+ 'Baby Rabbit' + \
+                              str(r.age) + ':' +  str(rabbit.age))
                         rabbits.append(baby_rabbit)
 
             #Grow Food
